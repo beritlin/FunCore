@@ -19,7 +19,9 @@ FunCore is a web-base GUI database for fungal core genes prediction. It provides
 
 It is also able to query for specific fungal species, function, and protein sequence. The simple search queries for the common options, the advance search page allows to construct more detailed queries.
 
-
+<p align="center"> 
+<img src="https://github.com/beritlin/FunCore/LOGO.gif" alt="this slowpoke moves"  width=250/>
+</p>
 
 ## Publication
 
