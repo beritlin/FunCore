@@ -11,7 +11,9 @@
     <img alt="status" src="https://img.shields.io/badge/status-on_going-lightgrey.svg" target="_blank" />
   </a>
 </p>
-
+<p align="center"> 
+<img src="Logo.png" width=450/>
+</p>
 
 # FunCore:  A Database for Fungal Core Genes
 
@@ -22,8 +24,9 @@ It is also able to query for specific fungal species, function, and protein sequ
 
 
 <p align="center"> 
-<img src="https://github.com/beritlin/FunCore/blob/master/Logo.gif" width=250/>
+<img src="Logo.gif" width=250/>
 </p>
+
 
 
 ## Publication
