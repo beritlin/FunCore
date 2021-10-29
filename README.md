@@ -37,9 +37,18 @@ It is also able to query for specific fungal species, function, and protein sequ
 
 
 
+## Prediction
+
+<p align="center"> 
+<img src="Pipeline.png" />
+</p>
+
+
+
 ## Author
 
 🥀  **Pei-Yu Lin**
 
 - Github: [@beritlin](https://github.com/beritlin)
 - Twitter: [@PeiYuLin11](https://twitter.com/PeiYuLin11) 
+- Email: peiyulin.tw@gmail.com
