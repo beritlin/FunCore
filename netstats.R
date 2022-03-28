@@ -47,6 +47,28 @@ for (i in 1:length(u)) {
   pb$tick()
 }
 
+##
+cl <- makeCluster(detectCores()-1)      # 開啟的執行緒數量
+registerDoParallel(cl) 
+
+deg_hn <- foreach(i = 1:length(u),.combine = rbind,.packages = "igraph")%dopar%{
+  g <- induced_subgraph(G, hn_m[hn_m$group==u[i],"protein"])
+  mean_edge <-  mean(strength(g, mode="out"))
+  links <- gsize(g)
+  triplet <-  length(triangles(g))/3
+  lcc <- transitivity(g, type = "localundirected")
+  cc <- mean(replace(lcc, is.na(lcc), 0))
+  n <- data.frame(group=u[i],mean_edge=mean_edge,links=links,triplet=triplet,nodes=unique(hn_m[hn_m$group==u[i],"X.nodes"]),cc=cc)
+  pb$tick()
+  return(n)
+}
+stopCluster(cl)                        # 關閉平行運算
+
+write.table(deg_hn,infile,col.names=T,row.names=F)
+
+##
+
+
 deg_hn$Edensity <- deg_hn$links/((deg_hn$nodes*(deg_hn$nodes-1))/2)
 deg_hn$Tdensity <- deg_hn$triplet/((deg_hn$nodes*(deg_hn$nodes-1)*(deg_hn$nodes-2))/6)
 

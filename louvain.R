@@ -19,7 +19,7 @@ p <- arg_parser("Louvain")
 p <- add_argument(p, "input", ,help="input mmeaqs2 result")
 p <- add_argument(p, "-e",, help="similarity of evalue", type="numeric",default="1e-5")
 p <- add_argument(p, "-i", help="similarity of identity", type="numeric",default="0.5")
-#p <- add_argument(p, "-sep", help="name",default="|")
+p <- add_argument(p, "-sep", help="the number of name and ID",type="numeric")
 
 p <- add_argument(p, "output", help="output file", type="character")
 
@@ -28,10 +28,10 @@ p <- add_argument(p, "output", help="output file", type="character")
 argv <- parse_args(p)
 
 ###
+cat("[",format(Sys.time(), "%X"),"]","Start...","\n")
 ptm <- proc.time()
 mmseq <- as.data.table(fread(argv$input))
 cat(paste("Time for read data:",seconds_to_period(as.numeric(proc.time() - ptm)[3]) ,"\n"))
-#mmseq <- read.csv(argv$input)
 
 ## remove AA
 ptm <- proc.time()
@@ -47,17 +47,19 @@ mmseq <- mmseq[!duplicated(t(apply(mmseq[,1:2], 1, sort))),]
 invisible(gc())
 
 ## sperate the ortholog ####
-mmseq1 <- setDT(mmseq)[, paste0("n1", 1:2) := tstrsplit(V1, "|", type.convert = TRUE, fixed = TRUE)]
-mmseq2 <- setDT(mmseq)[, paste0("n2", 1:2) := tstrsplit(V2, "|", fixed = TRUE)]
+sep <- unlist(strsplit(args$sep, ","))
 
-mmseq <- mmseq[,c("n11","n12","n21","n22","V12","V11")]
+mmseq1 <- setDT(mmseq)[, paste0("n1", 1:sep[2]) := tstrsplit(V1, "|", type.convert = TRUE, fixed = TRUE)]
+mmseq2 <- setDT(mmseq)[, paste0("n2", 1:sep[2]) := tstrsplit(V2, "|", fixed = TRUE)]
+
+mmseq <- mmseq[,c(paste0("n1",sep[1]),paste0("n1",sep[2]),paste0("n2",sep[1]),paste0("n2",sep[2]),"V12","V11")]
 rm(mmseq1,mmseq2)
 invisible(gc())
 
-mmseq_orth <- mmseq[n11!=n21]
+mmseq_orth <- mmseq[paste0("n1",sep[1])!=paste0("n2",sep[1])]
 
-mmseq_orth <- unite(mmseq_orth,"V1",n11:n12,sep = "|",remove = T)
-mmseq_orth <- unite(mmseq_orth,"V2",n21:n22,sep = "|",remove = T)
+mmseq_orth <- unite(mmseq_orth,"V1",paste0("n1",sep[1]):paste0("n1",sep[2]),sep = "|",remove = T)
+mmseq_orth <- unite(mmseq_orth,"V2",paste0("n2",sep[1]):paste0("n2",sep[2]),sep = "|",remove = T)
 
 cat(paste("Time for processing data:",seconds_to_period(as.numeric(proc.time() - ptm)[3]) ,"\n"))
 

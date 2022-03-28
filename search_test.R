@@ -17,9 +17,9 @@ foo( c("argparser" ) )
 p <- arg_parser("Search")
 
 # Add command line arguments
-p <- add_argument(p, "query_db", help="input  FASTA/FASTQ file", type="character")
-p <- add_argument(p, "input_db", help="input  FASTA/FASTQ DB", type="character")
-p <- add_argument(p, "output_db", help="output file", type="character")
+# p <- add_argument(p, "query_db", help="input  FASTA/FASTQ file", type="character")
+p <- add_argument(p, "input", help="input  FASTA/FASTQ DB", type="character")
+p <- add_argument(p, "-o", help="output file", type="character")
 p <- add_argument(p, "-p", help="path to mmseqs2", type="character")
 
 
