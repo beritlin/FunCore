@@ -46,7 +46,7 @@ invisible(gc())
 mmseq <- mmseq[!duplicated(t(apply(mmseq[,1:2], 1, sort))),]
 invisible(gc())
 
-## sperate the ortholog ####
+## separate the ortholog 
 sep <- unlist(strsplit(args$sep, ","))
 
 mmseq1 <- setDT(mmseq)[, paste0("n1", 1:sep[2]) := tstrsplit(V1, "|", type.convert = TRUE, fixed = TRUE)]
@@ -63,6 +63,7 @@ mmseq_orth <- unite(mmseq_orth,"V2",paste0("n2",sep[1]):paste0("n2",sep[2]),sep 
 
 cat(paste("Time for processing data:",seconds_to_period(as.numeric(proc.time() - ptm)[3]) ,"\n"))
 
+# creating a gene similarity network
 ptm <- proc.time()
 a1 <-   mclapply(mmseq_orth,unique)
 a <- c(a1[[1]],a1[[2]])
@@ -91,7 +92,7 @@ size_all <- data.frame(sizes(clusterlouvain))
 size <- size_all[size_all$Freq>2,]
 rm(size_all)
 
-## member
+## member of clusters
 colnames(size) <- c("group","#nodes")
 hn_m <- data.frame(clusterlouvain$names,clusterlouvain$membership)
 colnames(hn_m) <- c("protein","group")
@@ -100,6 +101,7 @@ hn_m <- hn_m[,c(1,3,2)]
 invisible(gc())
 cat("[",format(Sys.time(), "%X"),"]","The network is clustered into", length(unique(hn_m$group)),"subnets","\n")
 
+# saveing files
 infile <- as.character(gsub(" ", "", paste(argv$output,".txt")))
 ingraph <- as.character(gsub(" ", "", paste(argv$output,"_graph.txt")))
 
@@ -109,4 +111,5 @@ write_graph(G, ingraph, "ncol")
 cat(paste("Time for save data:",seconds_to_period(as.numeric(proc.time() - ptm)[3]) ,"\n"))
 cat("[",format(Sys.time(), "%X"),"]","Done.","\n")
 
-# Rscript louvain.R ~/test/examples/output.m8 ~/test/examples/louvain
+
+
