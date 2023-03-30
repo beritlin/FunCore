@@ -27,13 +27,12 @@
 G <- read_graph(argv$graph, "ncol",directed=FALSE)
 ## membership table
 hn_m <- fread(argv$membership,header=TRUE)
-
+hn_m <- data.frame(hn_m)
 # infile <- as.character(gsub(" ", "", paste(argv$output,".txt")))
 
 
 u <- unique(hn_m$group)
 # pb <- progress_bar$new(total = length(u), clear = FALSE,format = "[:bar] :current / :total :percent :eta")
-hn_m <- data.frame(hn_m)
 deg_hn <- data.frame()
 ## Calculating network structures
 
@@ -88,7 +87,7 @@ hn_m1 <- setDT(hn_m)[, paste0("n", 1:2) := tstrsplit(protein, "|", type.convert 
 deg_hn$species <- NA
 deg_hn <- as.data.frame(deg_hn)
 pb <- progress_bar$new(total = length(u), clear = FALSE,format = "[:bar] :current / :total :percent :eta")
-cat("Calculating species numner","\n")
+
 for (i in 1:length(u)) {
     deg_hn[i,9]<- as.numeric(dim(unique(hn_m1[hn_m1$group==u[i],'n1']))[1])
     pb$tick()
@@ -99,3 +98,8 @@ deg_hn$persp <-  deg_hn$nodes/deg_hn$species
 
 write.table(deg_hn,infile,col.names=T,row.names=F)
 
+## t-test 
+eg <- deg_hn[deg_hn$deg=="1",]
+noneg <- deg_hn[deg_hn$deg=="0",]
+
+t.tet.test(eg$species,noneg$species)
