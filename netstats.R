@@ -81,7 +81,6 @@ for (i in 1:length(u)) {
 
 ## calculate density
 deg_hn$Edensity <- deg_hn$links/((deg_hn$nodes*(deg_hn$nodes-1))/2)
-deg_hn$Tdensity <- deg_hn$triplet/((deg_hn$nodes*(deg_hn$nodes-1)*(deg_hn$nodes-2))/6)
 
 ## calculate species number
 hn_m1 <- setDT(hn_m)[, paste0("n", 1:2) := tstrsplit(protein, "|", type.convert = TRUE, fixed = TRUE)]
